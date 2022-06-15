@@ -169,7 +169,7 @@ document.addEventListener(SAVED_EVENT, () => {
 
 
 document.addEventListener(RENDER_EVENT, function () {
-    console.log(books);
+    // console.log(books);
 
     const inputBookTitle = document.getElementById('inputBookTitle');
     inputBookTitle.value = '';
@@ -195,4 +195,32 @@ document.addEventListener(RENDER_EVENT, function () {
 
 });
 
+const searchbook = document.getElementById('searchBook');
+const searchBookTitle = document.getElementById("searchBookTitle");
+searchbook.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (e.target.id == "searchSubmit") {
+        const keyword = searchBookTitle.value.toLowerCase();
+        cari(keyword);
+    }
+})
+
+function cari(keyword) {
+    const incomplete = document.getElementById('incompleteBookshelfList');
+    incomplete.innerHTML = '';
+    const complete = document.getElementById('completeBookshelfList');
+    complete.innerHTML = '';
+
+    for (const index in books) {
+        if (books[index].title.toLowerCase().includes(keyword)) {
+            makebook(books[index]);
+            console.log(books[index]);
+            const bookElement = makebook(books[index]);
+            if (!books[index].isCompleted)
+                incomplete.append(bookElement);
+            else
+                complete.append(bookElement);
+        }
+    }
+}
 
