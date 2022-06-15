@@ -80,7 +80,6 @@ function makebook(bookObject) {
     button_green.classList.add('green');
     if (bookObject.isCompleted) {
         button_green.innerHTML = 'Belum Selesai dibaca';
-
         button_green.addEventListener('click', function () {
             undoTaskFromCompleted(bookObject.id);
         })
@@ -95,7 +94,11 @@ function makebook(bookObject) {
     button_red.classList.add('red');
     button_red.innerHTML = 'Hapus buku';
     button_red.addEventListener('click', function () {
-        removeTaskFromCompleted(bookObject.id);
+        tanya = confirm('Apakah anda yakin ingin menghapus data?');
+        if (tanya == true) {
+            return removeTaskFromCompleted(bookObject.id);
+        }
+        else return false;
     })
 
     const action = document.createElement('div');
@@ -165,19 +168,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 document.addEventListener(SAVED_EVENT, () => {
+    console.log(localStorage.getItem(STORAGE_KEY));
 });
 
 
 document.addEventListener(RENDER_EVENT, function () {
-    // console.log(books);
-
-    const inputBookTitle = document.getElementById('inputBookTitle');
-    inputBookTitle.value = '';
-    const inputBookAuthor = document.getElementById('inputBookAuthor');
-    inputBookAuthor.value = '';
-    const inputBookYear = document.getElementById('inputBookYear');
-    inputBookYear.value = '';
-
     const incomplete = document.getElementById('incompleteBookshelfList');
     incomplete.innerHTML = '';
     const complete = document.getElementById('completeBookshelfList');
@@ -186,13 +181,11 @@ document.addEventListener(RENDER_EVENT, function () {
 
     for (const bookItem of books) {
         const bookElement = makebook(bookItem);
-        console.log(bookItem)
         if (!bookItem.isCompleted)
             incomplete.append(bookElement);
         else
             complete.append(bookElement);
     }
-
 });
 
 const searchbook = document.getElementById('searchBook');
@@ -201,11 +194,11 @@ searchbook.addEventListener('click', function (e) {
     e.preventDefault();
     if (e.target.id == "searchSubmit") {
         const keyword = searchBookTitle.value.toLowerCase();
-        cari(keyword);
+        search(keyword);
     }
 })
 
-function cari(keyword) {
+function search(keyword) {
     const incomplete = document.getElementById('incompleteBookshelfList');
     incomplete.innerHTML = '';
     const complete = document.getElementById('completeBookshelfList');
@@ -214,7 +207,6 @@ function cari(keyword) {
     for (const index in books) {
         if (books[index].title.toLowerCase().includes(keyword)) {
             makebook(books[index]);
-            console.log(books[index]);
             const bookElement = makebook(books[index]);
             if (!books[index].isCompleted)
                 incomplete.append(bookElement);
